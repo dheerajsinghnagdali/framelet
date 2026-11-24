@@ -1,0 +1,48 @@
+---
+title: Framelet
+description: Headless Instagram-inspired image editor.
+---
+
+# Framelet
+
+Framelet is a headless, framework-agnostic image editor. The core is pure TypeScript; adapters provide framework hooks and components.
+
+## Choose your framework
+
+<Tabs items={["React", "Solid", "Angular"]}>
+  <Tab value="React">
+    ```bash
+    npm install @framelet/react
+    ```
+    ```tsx
+    import { FrameletEditor } from '@framelet/react';
+    export default () => <FrameletEditor width={640} height={480} />;
+    ```
+  </Tab>
+  <Tab value="Solid">
+    ```bash
+    npm install @framelet/solid
+    ```
+    ```tsx
+    import { createFramelet } from '@framelet/solid';
+    const editor = createFramelet();
+    ```
+  </Tab>
+  <Tab value="Angular">
+    ```bash
+    npm install @framelet/angular
+    ```
+    ```ts
+    import { FrameletService } from '@framelet/angular';
+    ```
+  </Tab>
+</Tabs>
+
+## Features
+
+- Upload and drag-and-drop
+- Crop (resizable selection)
+- Rotate and flip
+- Filters and adjustments
+- Undo / redo
+- Headless core
