@@ -1,0 +1,39 @@
+{
+  "name": "@framelet/angular",
+  "version": "0.1.0",
+  "description": "Angular bindings for Framelet.",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsdown && tsc -b --force",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@framelet/core": "*"
+  },
+  "devDependencies": {
+    "@angular/core": "22.3.0",
+    "tsdown": "0.23.7"
+  },
+  "peerDependencies": {
+    "@angular/core": "^18 || ^19 || ^20 || ^21 || ^22"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

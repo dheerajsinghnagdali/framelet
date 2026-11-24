@@ -1,0 +1,39 @@
+{
+  "name": "@framelet/solid",
+  "version": "0.1.0",
+  "description": "Solid bindings for Framelet.",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsdown && tsc -b --force",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@framelet/core": "*"
+  },
+  "devDependencies": {
+    "solid-js": "2.0.3",
+    "tsdown": "0.23.7"
+  },
+  "peerDependencies": {
+    "solid-js": "^1 || ^2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
