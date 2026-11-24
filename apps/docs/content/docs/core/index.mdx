@@ -1,0 +1,62 @@
+---
+title: Overview
+description: Framelet core engine overview.
+---
+
+# Framelet Core
+
+`@framelet/core` is a pure TypeScript, framework-agnostic image editor engine. It manages image loading, filters, adjustments, transforms, cropping, history, rendering, and export. Framework adapters wrap this core and expose idiomatic APIs.
+
+## Highlights
+
+- Headless: bring your own UI.
+- Pure TypeScript, zero runtime dependencies.
+- Immutable state with subscriptions.
+- Undo/redo history with configurable depth.
+- Canvas rendering and Blob export.
+- Works with React, Solid, Angular, or vanilla JavaScript.
+
+## Install
+
+```bash
+npm install @framelet/core
+```
+
+## Quick example
+
+```ts
+import { createFramelet } from '@framelet/core';
+
+const editor = createFramelet({ maxHistory: 50 });
+
+editor.subscribe((state) => {
+  console.log(state.status, state.filter);
+});
+
+await editor.loadImage('/photo.jpg');
+editor.setFilter('clarendon');
+editor.setAdjustment('brightness', 10);
+editor.rotate(90);
+editor.flip('h');
+
+const ctx = document.querySelector('canvas')!.getContext('2d')!;
+editor.render(ctx, 640, 480);
+
+const blob = await editor.export({ format: 'image/png' });
+```
+
+## Architecture
+
+Framelet uses a store/reducer model:
+
+1. `createFramelet(options)` creates a store and editor.
+2. User actions dispatch reducer actions.
+3. Reducer returns the next immutable `FrameletState`.
+4. Subscribers render the new state.
+5. `render()` and `export()` derive output from state.
+
+## Next steps
+
+- Read [Concepts](/docs/core/concepts/state-and-store).
+- Explore the [API reference](/docs/core/api/create-framelet).
+- Choose a framework: React, Solid, or Angular.

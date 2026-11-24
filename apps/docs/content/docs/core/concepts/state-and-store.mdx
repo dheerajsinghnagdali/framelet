@@ -1,0 +1,53 @@
+---
+title: State and store
+description: Understand FrameletState and subscriptions.
+---
+
+# State and store
+
+Every editor owns a store holding a single immutable `FrameletState`.
+
+```ts
+const editor = createFramelet();
+const state = editor.getState();
+```
+
+## State shape
+
+| Field         | Type               | Description                               |
+| ------------- | ------------------ | ----------------------------------------- | ------------------------------------------------- | ------ | ------------ |
+| `image`       | `ImageSource \\    | null`                                     | The original source passed to `loadImage`.        |
+| `original`    | `ImageData \\      | null`                                     | Decoded original pixels.                          |
+| `working`     | `ImageData \\      | null`                                     | Current pixels after crop and history operations. |
+| `transform`   | `Transform`        | Rotation, flip flags, and crop rectangle. |
+| `adjustments` | `Adjustments`      | brightness, contrast, saturation, etc.    |
+| `filter`      | `FilterId \\       | null`                                     | Active filter preset.                             |
+| `history`     | `{ past, future }` | Undo/redo entries.                        |
+| `status`      | `idle \\           | loading \\                                | ready \\                                          | error` | Load status. |
+| `error`       | `Error \\          | null`                                     | Load error, if any.                               |
+
+## Subscriptions
+
+```ts
+const unsubscribe = editor.subscribe((state) => {
+  render(state);
+});
+
+unsubscribe();
+```
+
+Listeners are called synchronously whenever state changes. The React adapter uses `useSyncExternalStore` on top of this API.
+
+## Reducer model
+
+Direct mutation is not supported. Instead, the editor dispatches actions:
+
+```ts
+editor.dispatch({ type: 'SET_FILTER', payload: 'moon' });
+```
+
+The convenience methods (`setFilter`, `rotate`, etc.) are thin wrappers over `dispatch`.
+
+## Performance
+
+State is replaced, not mutated. This makes change detection trivial, but it also means `getState()` should be called when you need a fresh snapshot. Avoid holding stale references across async operations.

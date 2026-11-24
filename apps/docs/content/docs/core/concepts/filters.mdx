@@ -1,0 +1,58 @@
+---
+title: Filters
+description: Instagram-inspired filter presets.
+---
+
+# Filters
+
+Framelet includes 28 filter presets. Filters are applied as CSS filters during rendering and export, so they compose with adjustments.
+
+## Applying a filter
+
+```ts
+editor.setFilter('clarendon');
+editor.setFilter(null); // clear
+```
+
+The current filter is available at `state.filter`.
+
+## Filter IDs
+
+All valid IDs are exported as `FILTER_IDS`:
+
+```ts
+import { FILTER_IDS } from '@framelet/core';
+
+console.log(FILTER_IDS);
+```
+
+Use `FILTER_CSS` to inspect the CSS filter string for a preset:
+
+```ts
+import { FILTER_CSS } from '@framelet/core';
+
+console.log(FILTER_CSS.clarendon);
+```
+
+## Combining with adjustments
+
+`combinedCssFilter(filter, adjustments)` merges a preset with adjustment values:
+
+```ts
+import { combinedCssFilter } from '@framelet/core';
+
+const css = combinedCssFilter('gingham', {
+  brightness: 10,
+  contrast: 0,
+  saturation: 0,
+  warmth: 0,
+  highlights: 0,
+  shadows: 0,
+  vignette: 0,
+  sharpness: 0,
+  fade: 0,
+  grain: 0,
+});
+```
+
+See the [Filters catalog](/docs/core/api/filters-catalog) for every ID.

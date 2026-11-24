@@ -1,0 +1,56 @@
+---
+title: Custom UI
+description: Build a custom Solid editor.
+---
+
+# Custom UI
+
+```tsx
+import { createSignal, onCleanup, onMount } from 'solid-js';
+import { createFramelet, FILTER_IDS } from '@framelet/solid';
+
+export default function Editor() {
+  const editor = createFramelet();
+  const [state, setState] = createSignal(editor.getState());
+  let canvas!: HTMLCanvasElement;
+
+  const unsubscribe = editor.subscribe(setState);
+  onCleanup(() => {
+    unsubscribe();
+    editor.destroy();
+  });
+
+  const draw = () => {
+    const ctx = canvas.getContext('2d');
+    if (ctx) editor.render(ctx, 480, 480);
+  };
+
+  onMount(draw);
+
+  return (
+    <div>
+      <input
+        type="file"
+        onChange={async (e) => {
+          const file = e.currentTarget.files?.[0];
+          if (file) {
+            await editor.loadImage(file);
+            draw();
+          }
+        }}
+      />
+      <canvas ref={canvas} width={480} height={480} />
+      <select
+        onChange={(e) => {
+          editor.setFilter(e.currentTarget.value as any);
+          draw();
+        }}
+      >
+        {FILTER_IDS.map((id) => (
+          <option value={id}>{id}</option>
+        ))}
+      </select>
+    </div>
+  );
+}
+```

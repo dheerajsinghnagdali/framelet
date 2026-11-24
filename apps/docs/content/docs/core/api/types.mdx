@@ -1,0 +1,40 @@
+---
+title: Types
+description: Core TypeScript types.
+---
+
+# Core types
+
+All types are exported from `@framelet/core` and re-exported by framework adapters.
+
+## Editor
+
+| Type              | Description                                   |
+| ----------------- | --------------------------------------------- |
+| `FrameletEditor`  | Editor instance returned by `createFramelet`. |
+| `FrameletOptions` | Options for `createFramelet`.                 |
+| `FrameletState`   | Snapshot of editor state.                     |
+| `FrameletAction`  | Internal reducer action.                      |
+
+## Images and edits
+
+| Type            | Description                                |
+| --------------- | ------------------------------------------ | ------- | ------- | ------------------- | -------------------- | ----------- |
+| `ImageSource`   | `string \\                                 | Blob \\ | File \\ | HTMLImageElement \\ | HTMLCanvasElement \\ | ImageData`. |
+| `CropRect`      | `{ x, y, width, height }` in image pixels. |
+| `Adjustments`   | Numeric adjustment values.                 |
+| `Transform`     | Rotation, flips, and crop.                 |
+| `FilterId`      | Filter preset identifier.                  |
+| `ExportOptions` | Format and quality for `export()`.         |
+| `HistoryEntry`  | One undo/redo entry.                       |
+
+## Example
+
+```ts
+import type { FrameletState, FilterId } from '@framelet/core';
+
+function label(state: FrameletState): string {
+  const filter: FilterId | null = state.filter;
+  return filter ?? 'none';
+}
+```

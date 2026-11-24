@@ -1,0 +1,37 @@
+---
+title: Overview
+description: Framelet bindings for Solid.
+---
+
+# @framelet/solid
+
+Solid bindings for Framelet. The package re-exports the core engine so you can use `createFramelet` with Solid's fine-grained reactivity.
+
+## Install
+
+```bash
+npm install @framelet/solid
+```
+
+Peer dependencies: Solid 1 or Solid 2.
+
+## Current API
+
+`@framelet/solid` exposes:
+
+- `createFramelet` and all core exports
+- no dedicated hook or component yet
+
+You create an editor once and bridge its state into Solid signals or stores.
+
+```tsx
+import { createFramelet } from '@framelet/solid';
+
+const editor = createFramelet();
+```
+
+## Next steps
+
+- [Quick start](/docs/solid/quick-start)
+- [Usage with signals](/docs/solid/use-framelet)
+- [Custom UI](/docs/solid/custom-ui)

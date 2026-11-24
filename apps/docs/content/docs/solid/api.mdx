@@ -1,0 +1,23 @@
+---
+title: API
+description: Solid adapter API reference.
+---
+
+# Solid adapter API
+
+## Exports
+
+| Export           | Description                           |
+| ---------------- | ------------------------------------- |
+| `createFramelet` | Create a core editor (re-exported).   |
+| All core exports | Filters, types, utilities, constants. |
+
+## Typical usage
+
+```tsx
+import { createFramelet, FILTER_IDS, type FrameletState } from '@framelet/solid';
+
+const editor = createFramelet();
+```
+
+No framework-specific hook or component is exported yet.

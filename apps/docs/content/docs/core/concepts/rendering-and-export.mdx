@@ -1,0 +1,46 @@
+---
+title: Rendering and export
+description: Draw to canvas and export images.
+---
+
+# Rendering and export
+
+## Rendering
+
+`render(ctx, width?, height?)` draws the current working image with active filter, adjustments, rotation, and flips.
+
+```ts
+const canvas = document.querySelector('canvas')!;
+const ctx = canvas.getContext('2d')!;
+
+editor.render(ctx, 640, 480);
+```
+
+If width/height are omitted, the working image's natural size is used. The canvas is resized and letterboxed to preserve aspect ratio.
+
+## Export
+
+```ts
+const png = await editor.export({ format: 'image/png' });
+const jpeg = await editor.export({ format: 'image/jpeg', quality: 0.9 });
+```
+
+`export()` returns a `Blob`. Convert it to a URL for download:
+
+```ts
+const blob = await editor.export();
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = 'edited.png';
+a.click();
+URL.revokeObjectURL(url);
+```
+
+## Supported formats
+
+- `image/png` (default)
+- `image/jpeg`
+- `image/webp`
+
+`quality` applies to `image/jpeg` and `image/webp`.

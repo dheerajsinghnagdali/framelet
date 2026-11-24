@@ -1,0 +1,26 @@
+---
+title: API
+description: Angular adapter API reference.
+---
+
+# Angular adapter API
+
+## Exports
+
+| Export            | Description                                          |
+| ----------------- | ---------------------------------------------------- |
+| `FrameletService` | Injectable service with a `create(options?)` method. |
+| `createFramelet`  | Core editor factory (re-exported).                   |
+| All core exports  | Filters, types, utilities, constants.                |
+
+## Example
+
+```ts
+import { FrameletService, FILTER_IDS } from '@framelet/angular';
+
+export class EditorComponent {
+  private framelet = inject(FrameletService);
+  editor = this.framelet.create({ maxHistory: 50 });
+  filters = FILTER_IDS;
+}
+```

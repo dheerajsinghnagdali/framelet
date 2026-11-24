@@ -1,0 +1,37 @@
+---
+title: Usage
+description: Use Framelet with Angular lifecycle hooks.
+---
+
+# Usage
+
+`FrameletService.create()` returns a core `FrameletEditor`. Subscribe to state and clean up on destroy.
+
+```ts
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FrameletService } from '@framelet/angular';
+
+@Component({ selector: 'app-editor', template: '' })
+export class EditorComponent implements OnInit, OnDestroy {
+  editor = this.framelet.create();
+  status = this.editor.getState().status;
+  private unsubscribe?: () => void;
+
+  constructor(private framelet: FrameletService) {}
+
+  ngOnInit() {
+    this.unsubscribe = this.editor.subscribe((state) => {
+      this.status = state.status;
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe?.();
+    this.editor.destroy();
+  }
+}
+```
+
+## Change detection
+
+Subscription callbacks run synchronously. If you update component fields from a callback outside Angular's zone, trigger change detection accordingly.

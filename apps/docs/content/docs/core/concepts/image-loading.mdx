@@ -1,0 +1,31 @@
+---
+title: Image loading
+description: Supported image sources and errors.
+---
+
+# Image loading
+
+`loadImage(source)` normalizes any supported source into `ImageData`.
+
+## Supported sources
+
+- URL string
+- `Blob`
+- `File`
+- `HTMLImageElement`
+- `HTMLCanvasElement`
+- `ImageData`
+
+Cross-origin URLs must allow CORS, otherwise canvas readback will fail.
+
+## Status lifecycle
+
+`status` moves through `loading`, `ready`, or `error`. On failure, `state.error` contains the reason and `loadImage()` rejects.
+
+```ts
+try {
+  await editor.loadImage('/photo.jpg');
+} catch (error) {
+  console.error(error);
+}
+```

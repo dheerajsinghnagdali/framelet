@@ -1,0 +1,15 @@
+---
+title: Canvas rendering
+description: Render Framelet state in Angular.
+---
+
+# Canvas rendering
+
+```ts
+private draw() {
+  const ctx = this.canvas.nativeElement.getContext('2d');
+  if (ctx) this.editor.render(ctx, 480, 480);
+}
+```
+
+Call `draw()` after loading, after edits, and in `ngAfterViewInit` for the initial render.

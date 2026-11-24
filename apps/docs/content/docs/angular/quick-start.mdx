@@ -1,0 +1,34 @@
+---
+title: Quick start
+description: Use Framelet in Angular.
+---
+
+# Quick start
+
+```ts
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { FrameletService } from '@framelet/angular';
+
+@Component({
+  selector: 'app-editor',
+  template: `<canvas #canvas width="480" height="480"></canvas>`,
+})
+export class EditorComponent {
+  @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
+
+  private framelet = inject(FrameletService);
+  editor = this.framelet.create();
+
+  async load(file: File) {
+    await this.editor.loadImage(file);
+    this.draw();
+  }
+
+  private draw() {
+    const ctx = this.canvas.nativeElement.getContext('2d');
+    if (ctx) this.editor.render(ctx, 480, 480);
+  }
+}
+```
+
+Use the service instead of calling `createFramelet()` directly when you want Angular DI.

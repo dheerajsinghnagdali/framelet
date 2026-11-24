@@ -1,19 +1,26 @@
 import { source } from '@/lib/source';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { DocsPage, DocsBody, DocsDescription, DocsTitle } from 'fumadocs-ui/page';
-import { notFound } from 'next/navigation';
-import defaultMdxComponents from 'fumadocs-ui/mdx';
+import { notFound, redirect } from 'next/navigation';
 import { getMDXComponents } from '@/mdx-components';
 
 export default async function Page(props: { params: Promise<{ slug?: string[] }> }) {
   const params = await props.params;
+  if (!params.slug || params.slug.length === 0) {
+    redirect('/docs/react');
+  }
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
   const MDX = page.data.body;
 
   return (
-    <DocsLayout tree={source.pageTree} nav={{ title: 'Framelet' }}>
+    <DocsLayout
+      tree={source.pageTree}
+      tabMode="top"
+      tabs={{ transform: (option: any) => ({ ...option, unlisted: false }) }}
+      nav={{ title: 'Framelet' }}
+    >
       <DocsPage toc={page.data.toc} full={page.data.full}>
         <DocsTitle>{page.data.title}</DocsTitle>
         <DocsDescription>{page.data.description}</DocsDescription>

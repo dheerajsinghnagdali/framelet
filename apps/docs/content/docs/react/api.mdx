@@ -1,0 +1,30 @@
+---
+title: API
+description: React adapter API reference.
+---
+
+# React adapter API
+
+`@framelet/react` re-exports every core export and adds:
+
+## Components
+
+| Export                | Description                      |
+| --------------------- | -------------------------------- |
+| `FrameletEditor`      | Ready-made editor component.     |
+| `FrameletEditorProps` | Props type for `FrameletEditor`. |
+
+## Hooks
+
+| Export              | Description                   |
+| ------------------- | ----------------------------- |
+| `useFramelet`       | Headless editor hook.         |
+| `UseFrameletResult` | Return type of `useFramelet`. |
+
+## Core re-exports
+
+`createFramelet`, `FILTER_IDS`, `FILTER_CSS`, types, and utilities are all available from `@framelet/react`.
+
+```tsx
+import { createFramelet, FILTER_IDS, type FrameletState } from '@framelet/react';
+```

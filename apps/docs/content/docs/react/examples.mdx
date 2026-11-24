@@ -1,0 +1,51 @@
+---
+title: Examples
+description: Common React patterns.
+---
+
+# Examples
+
+## Upload and preview
+
+```tsx
+<input
+  type="file"
+  accept="image/*"
+  onChange={(e) => {
+    const file = e.target.files?.[0];
+    if (file) void api.loadImage(file);
+  }}
+/>
+```
+
+## Adjustment slider
+
+```tsx
+<input
+  type="range"
+  min={-100}
+  max={100}
+  value={api.state.adjustments.brightness}
+  onChange={(e) => api.setAdjustment('brightness', Number(e.target.value))}
+/>
+```
+
+## Undo/redo controls
+
+```tsx
+<button onClick={api.undo} disabled={api.state.history.past.length === 0}>
+  Undo
+</button>
+<button onClick={api.redo} disabled={api.state.history.future.length === 0}>
+  Redo
+</button>
+```
+
+## Crop workflow
+
+```tsx
+<button onClick={() => api.setCrop({ x: 0, y: 0, width: 200, height: 200 })}>
+  Preview crop
+</button>
+<button onClick={api.applyCrop}>Apply crop</button>
+```

@@ -1,0 +1,54 @@
+---
+title: Installation
+description: Install and configure @framelet/core.
+---
+
+# Installation
+
+```bash
+npm install @framelet/core
+```
+
+Other package managers:
+
+```bash
+pnpm add @framelet/core
+yarn add @framelet/core
+bun add @framelet/core
+```
+
+## Runtime requirements
+
+`@framelet/core` targets modern browsers. It uses:
+
+- `HTMLCanvasElement` and `CanvasRenderingContext2D`
+- `ImageData`
+- `document.createElement`
+- `Blob` and `URL.createObjectURL` when exporting
+
+It has no runtime dependencies and no framework requirement.
+
+## TypeScript
+
+The package ships declarations. Import types as needed:
+
+```ts
+import type {
+  Adjustments,
+  CropRect,
+  ExportOptions,
+  FilterId,
+  FrameletEditor,
+  FrameletOptions,
+  FrameletState,
+  ImageSource,
+} from '@framelet/core';
+```
+
+## Bundlers
+
+The package exposes both ESM and CommonJS builds with conditional exports. It should work with Vite, Webpack, Rollup, Next.js, and Node-based test runners.
+
+## SSR
+
+`createFramelet()` itself is safe to call on the server, but image loading, rendering, and export require a browser. Create the editor inside a client component or guard browser-only calls with `typeof document !== 'undefined'`.

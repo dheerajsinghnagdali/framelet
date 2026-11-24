@@ -1,0 +1,35 @@
+---
+title: Usage
+description: Bridge Framelet state into Solid reactivity.
+---
+
+# Usage
+
+There is no dedicated Solid hook yet. `createFramelet()` returns a core editor; bridge it into Solid with signals or stores.
+
+## Signals
+
+```tsx
+import { createSignal } from 'solid-js';
+import { createFramelet } from '@framelet/solid';
+
+const editor = createFramelet();
+const [filter, setFilter] = createSignal(editor.getState().filter);
+
+const unsubscribe = editor.subscribe((state) => setFilter(state.filter));
+```
+
+Call `unsubscribe()` in `onCleanup()`.
+
+## Store
+
+```tsx
+import { createStore } from 'solid-js/store';
+
+const [state, setState] = createStore(editor.getState());
+editor.subscribe((next) => setState(next));
+```
+
+## One editor per component
+
+Create the editor inside the component closure so each component instance gets its own state. For a shared editor, create it in a module or context.

@@ -1,0 +1,42 @@
+---
+title: Adjustments
+description: Fine-tune brightness, contrast, and more.
+---
+
+# Adjustments
+
+Adjustments are numeric values, typically in the range `-100..100`. They are stored in state and applied during render/export.
+
+```ts
+editor.setAdjustment('brightness', 20);
+editor.setAdjustment('contrast', -10);
+```
+
+## Keys
+
+| Key          | Effect                             |
+| ------------ | ---------------------------------- |
+| `brightness` | Overall lightness.                 |
+| `contrast`   | Difference between light and dark. |
+| `saturation` | Color intensity.                   |
+| `warmth`     | Warm/cool color temperature.       |
+| `highlights` | Bright regions.                    |
+| `shadows`    | Dark regions.                      |
+| `vignette`   | Edge darkening.                    |
+| `sharpness`  | Edge definition.                   |
+| `fade`       | Lifts blacks and reduces contrast. |
+| `grain`      | Film-like noise.                   |
+
+## Defaults
+
+`DEFAULT_ADJUSTMENTS` contains all keys set to `0`.
+
+```ts
+import { DEFAULT_ADJUSTMENTS } from '@framelet/core';
+
+editor.reset(); // returns to defaults
+```
+
+## CSS mapping
+
+`adjustmentsToCss(adjustments)` converts adjustments into a CSS filter string. Framelet uses this internally when drawing to canvas.

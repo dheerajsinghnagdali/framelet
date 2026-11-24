@@ -1,0 +1,38 @@
+---
+title: FrameletEditor
+description: Ready-made React component.
+---
+
+# FrameletEditor
+
+A batteries-included editor with upload, crop, rotate, flip, filters, and adjustments.
+
+```tsx
+import { FrameletEditor } from '@framelet/react';
+
+<FrameletEditor src="/photo.jpg" width={640} height={480} className="my-editor" />;
+```
+
+## Props
+
+| Prop         | Type              | Default | Description                        |
+| ------------ | ----------------- | ------- | ---------------------------------- |
+| `src`        | `ImageSource`     | —       | Initial image to load.             |
+| `width`      | `number`          | `480`   | Canvas width in CSS pixels.        |
+| `height`     | `number`          | `480`   | Canvas height in CSS pixels.       |
+| `className`  | `string`          | —       | Class applied to the root element. |
+| `maxHistory` | `number`          | `50`    | Passed to core options.            |
+| `onChange`   | `(state) => void` | —       | Passed to core options.            |
+
+## Behavior
+
+- Drag and drop an image onto the canvas.
+- Use **Upload** to open a file picker.
+- Use **Crop** to draw a resizable selection, then **Apply Crop**.
+- Rotate and flip with the toolbar.
+- Undo, redo, and reset.
+- Choose a filter and tune adjustments with sliders.
+
+## Styling
+
+The component uses inline styles so it works without a CSS setup. Pass `className` to target the root element in your stylesheet.

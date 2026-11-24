@@ -1,0 +1,6 @@
+{
+  "title": "Core",
+  "description": "Framework-agnostic Framelet engine.",
+  "root": true,
+  "pages": ["index", "installation", "quick-start", "concepts", "api"]
+}

@@ -1,0 +1,44 @@
+---
+title: createFramelet
+description: Create a core editor instance.
+---
+
+# createFramelet
+
+```ts
+import { createFramelet } from '@framelet/core';
+
+const editor = createFramelet({
+  maxHistory: 50,
+  onChange: (state) => console.log(state.status),
+});
+```
+
+## Options
+
+| Option       | Type              | Default | Description                     |
+| ------------ | ----------------- | ------- | ------------------------------- |
+| `maxHistory` | `number`          | `50`    | Maximum number of undo entries. |
+| `onChange`   | `(state) => void` | —       | Called on every state change.   |
+
+## Editor methods
+
+| Method                      | Description                                |
+| --------------------------- | ------------------------------------------ |
+| `getState()`                | Get current `FrameletState`.               |
+| `subscribe(listener)`       | Subscribe to changes; returns unsubscribe. |
+| `dispatch(action)`          | Dispatch a reducer action.                 |
+| `loadImage(source)`         | Load an `ImageSource` asynchronously.      |
+| `setFilter(id)`             | Set or clear the filter.                   |
+| `setAdjustment(key, value)` | Set one adjustment.                        |
+| `setCrop(rect)`             | Preview a crop rectangle.                  |
+| `crop(rect)`                | Apply a crop rectangle.                    |
+| `applyCrop()`               | Apply the current crop rectangle.          |
+| `rotate(deg)`               | Rotate by 90, 180, or 270 degrees.         |
+| `flip(axis)`                | Flip horizontally or vertically.           |
+| `undo()`                    | Step backward in history.                  |
+| `redo()`                    | Step forward in history.                   |
+| `reset()`                   | Restore original image and defaults.       |
+| `render(ctx, w?, h?)`       | Draw to a canvas context.                  |
+| `export(options?)`          | Export a `Blob`.                           |
+| `destroy()`                 | Release resources.                         |

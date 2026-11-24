@@ -1,0 +1,30 @@
+---
+title: Examples
+description: Solid usage examples.
+---
+
+# Examples
+
+## Adjustment slider
+
+```tsx
+<input
+  type="range"
+  min={-100}
+  max={100}
+  value={editor.getState().adjustments.brightness}
+  onInput={(e) => {
+    editor.setAdjustment('brightness', Number(e.currentTarget.value));
+    draw();
+  }}
+/>
+```
+
+## Undo/redo
+
+```tsx
+<button onClick={() => { editor.undo(); draw(); }}>Undo</button>
+<button onClick={() => { editor.redo(); draw(); }}>Redo</button>
+```
+
+A dedicated Solid hook/component is planned. Until then, use the core API directly.

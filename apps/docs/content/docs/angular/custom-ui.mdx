@@ -1,0 +1,55 @@
+---
+title: Custom UI
+description: Build a custom Angular editor.
+---
+
+# Custom UI
+
+```ts
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { FILTER_IDS, FrameletService } from '@framelet/angular';
+
+@Component({
+  selector: 'app-editor',
+  template: `
+    <input type="file" (change)="onFile($event)" />
+    <canvas #canvas width="480" height="480"></canvas>
+    <select (change)="onFilter($event)">
+      <option *ngFor="let id of filters" [value]="id">{{ id }}</option>
+    </select>
+    <button (click)="undo()">Undo</button>
+  `,
+})
+export class EditorComponent {
+  @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
+  filters = FILTER_IDS;
+
+  private framelet = inject(FrameletService);
+  editor = this.framelet.create();
+
+  async onFile(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (file) {
+      await this.editor.loadImage(file);
+      this.draw();
+    }
+  }
+
+  onFilter(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+    this.editor.setFilter(value as any);
+    this.draw();
+  }
+
+  undo() {
+    this.editor.undo();
+    this.draw();
+  }
+
+  private draw() {
+    const ctx = this.canvas.nativeElement.getContext('2d');
+    if (ctx) this.editor.render(ctx, 480, 480);
+  }
+}
+```

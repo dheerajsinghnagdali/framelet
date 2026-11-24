@@ -1,0 +1,57 @@
+---
+title: Transforms and crop
+description: Rotate, flip, and crop images.
+---
+
+# Transforms and crop
+
+## Rotation
+
+Rotation is stored as `0 | 90 | 180 | 270` degrees. Rotating repeatedly wraps around.
+
+```ts
+editor.rotate(90);
+editor.rotate(180);
+```
+
+## Flipping
+
+```ts
+editor.flip('h'); // horizontal
+editor.flip('v'); // vertical
+```
+
+Flips are stored as `flipH` and `flipV` booleans in `state.transform`.
+
+## Crop rectangle
+
+A `CropRect` uses image-space pixels:
+
+```ts
+interface CropRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+```
+
+You can preview a crop without applying it:
+
+```ts
+editor.setCrop({ x: 10, y: 10, width: 100, height: 100 });
+```
+
+Apply it immediately:
+
+```ts
+editor.crop({ x: 10, y: 10, width: 100, height: 100 });
+```
+
+Or apply the rectangle already in state:
+
+```ts
+editor.applyCrop();
+```
+
+Applying a crop modifies `working` pixels and records a history entry.

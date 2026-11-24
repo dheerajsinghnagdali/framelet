@@ -1,0 +1,58 @@
+---
+title: useFramelet
+description: Headless React hook for Framelet.
+---
+
+# useFramelet
+
+```tsx
+import { useFramelet } from '@framelet/react';
+
+const editor = useFramelet({ maxHistory: 50 });
+```
+
+## Parameters
+
+| Parameter | Type              | Description                   |
+| --------- | ----------------- | ----------------------------- |
+| `options` | `FrameletOptions` | Optional core editor options. |
+
+## Return value
+
+| Field                       | Description                          |
+| --------------------------- | ------------------------------------ |
+| `state`                     | Current `FrameletState`.             |
+| `editor`                    | Underlying core editor instance.     |
+| `loadImage(source)`         | Load an image.                       |
+| `setFilter(id)`             | Set or clear the filter.             |
+| `setAdjustment(key, value)` | Set one adjustment.                  |
+| `setCrop(rect)`             | Preview a crop rectangle.            |
+| `crop(rect)`                | Apply a crop rectangle.              |
+| `applyCrop()`               | Apply the current crop.              |
+| `rotate(deg)`               | Rotate 90, 180, or 270 degrees.      |
+| `flip(axis)`                | Flip horizontally or vertically.     |
+| `undo()`                    | Undo the last action.                |
+| `redo()`                    | Redo the last undone action.         |
+| `reset()`                   | Restore original image and defaults. |
+| `render(ctx, w?, h?)`       | Draw to a canvas.                    |
+| `exportImage(opts?)`        | Export a `Blob`.                     |
+
+## Lifecycle
+
+The hook creates one editor instance with `useState`, subscribes with `useSyncExternalStore`, and calls `editor.destroy()` on unmount.
+
+## Example
+
+```tsx
+function Filters() {
+  const { state, setFilter } = useFramelet();
+
+  return (
+    <select value={state.filter ?? 'none'} onChange={(e) => setFilter(e.target.value || null)}>
+      <option value="none">None</option>
+      <option value="clarendon">Clarendon</option>
+      <option value="moon">Moon</option>
+    </select>
+  );
+}
+```

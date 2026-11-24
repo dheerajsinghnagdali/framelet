@@ -1,0 +1,12 @@
+{
+  "title": "Concepts",
+  "pages": [
+    "state-and-store",
+    "image-loading",
+    "filters",
+    "adjustments",
+    "transforms-and-crop",
+    "history",
+    "rendering-and-export"
+  ]
+}

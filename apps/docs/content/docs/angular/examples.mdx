@@ -1,0 +1,34 @@
+---
+title: Examples
+description: Angular usage examples.
+---
+
+# Examples
+
+## Adjustment slider
+
+```html
+<input
+  type="range"
+  min="-100"
+  max="100"
+  [value]="editor.getState().adjustments.brightness"
+  (input)="setBrightness($event)"
+/>
+```
+
+```ts
+setBrightness(event: Event) {
+  const value = Number((event.target as HTMLInputElement).value);
+  this.editor.setAdjustment('brightness', value);
+  this.draw();
+}
+```
+
+## Undo/redo
+
+```html
+<button (click)="undo()">Undo</button> <button (click)="redo()">Redo</button>
+```
+
+A dedicated Angular component wrapper is planned. Until then, use `FrameletService` and the core API.

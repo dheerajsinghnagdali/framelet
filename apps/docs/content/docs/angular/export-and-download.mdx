@@ -1,0 +1,20 @@
+---
+title: Export and download
+description: Export images from Angular.
+---
+
+# Export and download
+
+```ts
+async download() {
+  const blob = await this.editor.export({ format: 'image/png' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'framelet-image.png';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+```
+
+Ensure `this.editor.getState().status === 'ready'` before exporting.

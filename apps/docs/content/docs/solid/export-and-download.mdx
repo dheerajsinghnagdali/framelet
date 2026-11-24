@@ -1,0 +1,18 @@
+---
+title: Export and download
+description: Export images from Solid.
+---
+
+# Export and download
+
+```ts
+const blob = await editor.export({ format: 'image/png' });
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = 'framelet-image.png';
+a.click();
+URL.revokeObjectURL(url);
+```
+
+Check `editor.getState().status === 'ready'` before exporting.

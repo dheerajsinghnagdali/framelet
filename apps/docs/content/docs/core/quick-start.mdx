@@ -1,0 +1,44 @@
+---
+title: Quick start
+description: Get started with the core engine.
+---
+
+# Quick start
+
+Create an editor, load an image, render it, and export the result.
+
+```ts
+import { createFramelet } from '@framelet/core';
+
+const editor = createFramelet();
+await editor.loadImage('/photo.jpg');
+
+editor.setFilter('moon');
+editor.setAdjustment('brightness', 12);
+editor.rotate(90);
+
+const canvas = document.querySelector('canvas')!;
+const ctx = canvas.getContext('2d')!;
+editor.render(ctx, 600, 600);
+
+const blob = await editor.export({ format: 'image/jpeg', quality: 0.9 });
+```
+
+## Loading sources
+
+`loadImage()` accepts several source types:
+
+```ts
+await editor.loadImage('https://example.com/photo.jpg');
+await editor.loadImage(fileInput.files![0]);
+await editor.loadImage(blob);
+await editor.loadImage(imageElement);
+```
+
+## Checking status
+
+```ts
+if (editor.getState().status === 'error') {
+  console.error(editor.getState().error);
+}
+```

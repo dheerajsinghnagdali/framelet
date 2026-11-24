@@ -1,0 +1,16 @@
+{
+  "title": "Solid",
+  "description": "Framelet bindings for Solid.",
+  "root": true,
+  "pages": [
+    "index",
+    "installation",
+    "quick-start",
+    "use-framelet",
+    "custom-ui",
+    "canvas-rendering",
+    "export-and-download",
+    "examples",
+    "api"
+  ]
+}

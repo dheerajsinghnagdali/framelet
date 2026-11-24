@@ -1,0 +1,54 @@
+---
+title: Custom UI
+description: Build a fully custom React editor.
+---
+
+# Custom UI
+
+Use `useFramelet` when you want complete control over markup and styling.
+
+```tsx
+import { useEffect, useRef } from 'react';
+import { useFramelet, FILTER_IDS } from '@framelet/react';
+
+export function MyEditor() {
+  const api = useFramelet();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const ctx = canvasRef.current?.getContext('2d');
+    if (ctx) api.render(ctx, 480, 480);
+  }, [api, api.state]);
+
+  return (
+    <div>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) void api.loadImage(file);
+        }}
+      />
+      <canvas ref={canvasRef} width={480} height={480} />
+
+      <select onChange={(e) => api.setFilter(e.target.value as any)}>
+        {FILTER_IDS.map((id) => (
+          <option key={id} value={id}>
+            {id}
+          </option>
+        ))}
+      </select>
+
+      <button onClick={() => api.rotate(90)}>Rotate</button>
+      <button onClick={() => api.flip('h')}>Flip H</button>
+      <button onClick={api.undo}>Undo</button>
+      <button onClick={api.redo}>Redo</button>
+    </div>
+  );
+}
+```
+
+## Rendering on state change
+
+`api.state` is a stable snapshot. Including it in the effect dependency array re-renders the canvas after every edit.

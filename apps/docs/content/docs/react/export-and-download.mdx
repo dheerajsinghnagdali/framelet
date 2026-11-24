@@ -1,0 +1,27 @@
+---
+title: Export and download
+description: Export edited images from React.
+---
+
+# Export and download
+
+```tsx
+async function download() {
+  const blob = await api.exportImage({ format: 'image/png' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'framelet-image.png';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+```
+
+## Options
+
+| Option    | Type          | Default       |
+| --------- | ------------- | ------------- | ----------- | ----------- |
+| `format`  | `image/png \\ | image/jpeg \\ | image/webp` | `image/png` |
+| `quality` | `number`      | `0.92`        |
+
+Export requires a loaded image. Check `api.state.status === 'ready'` before exporting.

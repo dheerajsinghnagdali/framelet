@@ -1,0 +1,35 @@
+---
+title: Overview
+description: Framelet bindings for Angular.
+---
+
+# @framelet/angular
+
+Angular bindings for Framelet. The package provides an injectable `FrameletService` and re-exports the core engine.
+
+## Install
+
+```bash
+npm install @framelet/angular
+```
+
+Peer dependencies: Angular 18 or newer.
+
+## Current API
+
+- `FrameletService` — injectable factory for core editors.
+- `createFramelet` and all core exports.
+
+```ts
+import { FrameletService } from '@framelet/angular';
+
+constructor(private framelet: FrameletService) {
+  this.editor = this.framelet.create();
+}
+```
+
+## Next steps
+
+- [Quick start](/docs/angular/quick-start)
+- [Usage](/docs/angular/use-framelet)
+- [Custom UI](/docs/angular/custom-ui)

@@ -1,0 +1,53 @@
+---
+title: Overview
+description: Framelet bindings for React.
+---
+
+# @framelet/react
+
+React bindings for Framelet. The package provides a headless `useFramelet` hook and a ready-to-use `FrameletEditor` component. It re-exports the full core API.
+
+## Install
+
+```bash
+npm install @framelet/react
+```
+
+Peer dependencies: React 18 or React 19.
+
+## Two ways to use Framelet
+
+### Component
+
+```tsx
+import { FrameletEditor } from '@framelet/react';
+
+export default function App() {
+  return <FrameletEditor src="/photo.jpg" width={640} height={480} />;
+}
+```
+
+### Hook
+
+```tsx
+import { useFramelet } from '@framelet/react';
+
+function MyEditor() {
+  const editor = useFramelet();
+  return <button onClick={() => editor.loadImage('/photo.jpg')}>Load</button>;
+}
+```
+
+## Exports
+
+- `useFramelet` — headless state/actions hook.
+- `UseFrameletResult` — hook return type.
+- `FrameletEditor` — ready-made component.
+- `FrameletEditorProps` — component props.
+- Everything from `@framelet/core`.
+
+## Next steps
+
+- [Quick start](/docs/react/quick-start)
+- [useFramelet API](/docs/react/use-framelet)
+- [FrameletEditor API](/docs/react/framelet-editor)

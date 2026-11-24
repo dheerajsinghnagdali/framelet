@@ -1,0 +1,29 @@
+---
+title: Quick start
+description: Use Framelet in Solid.
+---
+
+# Quick start
+
+```tsx
+import { createSignal, onMount } from 'solid-js';
+import { createFramelet } from '@framelet/solid';
+
+export default function App() {
+  const editor = createFramelet();
+  const [status, setStatus] = createSignal(editor.getState().status);
+  let canvas!: HTMLCanvasElement;
+
+  editor.subscribe((state) => setStatus(state.status));
+
+  onMount(async () => {
+    await editor.loadImage('/photo.jpg');
+    const ctx = canvas.getContext('2d');
+    if (ctx) editor.render(ctx, 480, 480);
+  });
+
+  return <canvas ref={canvas} width={480} height={480} />;
+}
+```
+
+Use `editor.subscribe()` to drive signals, and call `editor.render()` after state changes.

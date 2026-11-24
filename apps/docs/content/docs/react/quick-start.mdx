@@ -1,0 +1,51 @@
+---
+title: Quick start
+description: Use FrameletEditor in a React app.
+---
+
+# Quick start
+
+## Ready-made component
+
+```tsx
+import { FrameletEditor } from '@framelet/react';
+
+export default function App() {
+  return <FrameletEditor width={640} height={480} />;
+}
+```
+
+## Load an initial image
+
+```tsx
+<FrameletEditor src="/photo.jpg" width={640} height={480} />
+```
+
+The `src` prop accepts any `ImageSource`, including URLs, `File`, `Blob`, `HTMLImageElement`, and `ImageData`.
+
+## Headless hook
+
+```tsx
+import { useFramelet } from '@framelet/react';
+
+function Editor() {
+  const { state, loadImage, setFilter, undo, redo, render } = useFramelet();
+
+  return (
+    <>
+      <input
+        type="file"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) void loadImage(file);
+        }}
+      />
+      <button onClick={() => setFilter('clarendon')}>Clarendon</button>
+      <button onClick={undo}>Undo</button>
+      <button onClick={redo}>Redo</button>
+    </>
+  );
+}
+```
+
+See [Custom UI](/docs/react/custom-ui) for a complete canvas example.

@@ -1,0 +1,33 @@
+---
+title: History
+description: Undo, redo, and reset.
+---
+
+# History
+
+Every mutating editor method records a history entry. Undo and redo walk that timeline.
+
+```ts
+editor.undo();
+editor.redo();
+editor.reset();
+```
+
+## History state
+
+```ts
+state.history.past; // previous entries
+state.history.future; // entries available for redo
+```
+
+## Depth
+
+Set maximum retained entries with `maxHistory` (default `50`):
+
+```ts
+const editor = createFramelet({ maxHistory: 100 });
+```
+
+## Reset
+
+`reset()` restores the original image and clears adjustments, filter, and transform state while preserving history semantics.

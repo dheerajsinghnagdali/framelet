@@ -1,0 +1,16 @@
+{
+  "title": "Angular",
+  "description": "Framelet bindings for Angular.",
+  "root": true,
+  "pages": [
+    "index",
+    "installation",
+    "quick-start",
+    "use-framelet",
+    "custom-ui",
+    "canvas-rendering",
+    "export-and-download",
+    "examples",
+    "api"
+  ]
+}

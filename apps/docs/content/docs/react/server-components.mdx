@@ -1,0 +1,30 @@
+---
+title: Server components
+description: Use Framelet with React Server Components.
+---
+
+# Server components
+
+Framelet is browser-only for loading, rendering, and export. In Next.js App Router, mark editor components with `'use client'`.
+
+```tsx
+'use client';
+
+import { FrameletEditor } from '@framelet/react';
+
+export default function Editor() {
+  return <FrameletEditor />;
+}
+```
+
+You can still render a client editor from a server page:
+
+```tsx
+import Editor from './editor';
+
+export default function Page() {
+  return <Editor />;
+}
+```
+
+Pass only serializable data as props from server to client components.

@@ -1,0 +1,19 @@
+---
+title: Canvas rendering
+description: Render Framelet state to a canvas.
+---
+
+# Canvas rendering
+
+```tsx
+useEffect(() => {
+  const ctx = canvasRef.current?.getContext('2d');
+  if (ctx) api.render(ctx, width, height);
+}, [api, api.state, width, height]);
+```
+
+`render()` resizes the canvas, clears it, applies the active CSS filter from filter + adjustments, then draws the working image with rotation and flips.
+
+## Aspect ratio
+
+The image is scaled with `Math.min(width / img.width, height / img.height)` and centered, so it is never stretched.

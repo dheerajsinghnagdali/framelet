@@ -1,0 +1,24 @@
+---
+title: Filters catalog
+description: All filter IDs.
+---
+
+# Filters catalog
+
+Use any of these IDs with `editor.setFilter(id)`.
+
+| Group   | IDs                                                             |
+| ------- | --------------------------------------------------------------- |
+| Classic | `none`, `clarendon`, `gingham`, `moon`, `lark`, `reyes`, `juno` |
+| Soft    | `slumber`, `crema`, `ludwig`, `aden`, `perpetua`, `amaro`       |
+| Warm    | `mayfair`, `rise`, `hudson`, `valencia`, `xpro2`, `sierra`      |
+| Mood    | `willow`, `lofi`, `inkwell`, `hefe`, `nashville`, `toaster`     |
+| Vintage | `walden`, `1977`, `kelvin`                                      |
+
+Import the runtime list:
+
+```ts
+import { FILTER_IDS, FILTER_CSS } from '@framelet/core';
+
+FILTER_IDS.forEach((id) => console.log(id, FILTER_CSS[id]));
+```

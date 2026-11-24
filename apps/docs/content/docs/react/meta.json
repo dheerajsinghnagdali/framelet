@@ -1,0 +1,18 @@
+{
+  "title": "React",
+  "description": "Framelet bindings for React.",
+  "root": true,
+  "pages": [
+    "index",
+    "installation",
+    "quick-start",
+    "use-framelet",
+    "framelet-editor",
+    "custom-ui",
+    "canvas-rendering",
+    "export-and-download",
+    "server-components",
+    "examples",
+    "api"
+  ]
+}

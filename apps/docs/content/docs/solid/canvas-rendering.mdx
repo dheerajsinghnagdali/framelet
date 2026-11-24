@@ -1,0 +1,15 @@
+---
+title: Canvas rendering
+description: Render Framelet state to a Solid canvas.
+---
+
+# Canvas rendering
+
+```tsx
+const draw = () => {
+  const ctx = canvas.getContext('2d');
+  if (ctx) editor.render(ctx, 480, 480);
+};
+```
+
+Call `draw()` after `loadImage`, after every edit, and in `onMount`. `render()` applies the active filter, adjustments, rotation, and flips.
