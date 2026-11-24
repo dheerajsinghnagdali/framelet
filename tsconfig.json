@@ -1,0 +1,11 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/react" },
+    { "path": "./packages/solid" },
+    { "path": "./packages/angular" },
+    { "path": "./apps/demo" },
+    { "path": "./apps/docs" }
+  ]
+}
