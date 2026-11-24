@@ -1,5 +1,5 @@
 {
-  "name": "framelet-root",
+  "name": "Framelet",
   "private": true,
   "workspaces": [
     "packages/*",
@@ -9,6 +9,8 @@
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "dev": "npm run dev --workspace apps/demo",
+    "docs": "npm run dev --workspace apps/docs",
+    "docs:build": "npm run build --workspace apps/docs",
     "lint": "oxlint .",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
