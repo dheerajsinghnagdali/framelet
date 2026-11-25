@@ -1,5 +1,5 @@
 {
-  "name": "Framelet",
+  "name": "framelet",
   "private": true,
   "workspaces": [
     "packages/*",
