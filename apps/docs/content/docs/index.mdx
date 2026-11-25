@@ -15,8 +15,14 @@ Framelet is a headless, framework-agnostic image editor. The core is pure TypeSc
     npm install @framelet/react
     ```
     ```tsx
-    import { FrameletEditor } from '@framelet/react';
-    export default () => <FrameletEditor width={640} height={480} />;
+    import { Framelet } from '@framelet/react';
+    export default () => (
+      <Framelet.Root width={640} height={480}>
+        <Framelet.Viewport>
+          <Framelet.Canvas />
+        </Framelet.Viewport>
+      </Framelet.Root>
+    );
     ```
   </Tab>
   <Tab value="Solid">

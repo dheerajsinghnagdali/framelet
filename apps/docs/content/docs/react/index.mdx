@@ -5,7 +5,9 @@ description: Framelet bindings for React.
 
 # @framelet/react
 
-React bindings for Framelet. The package provides a headless `useFramelet` hook and a ready-to-use `FrameletEditor` component. It re-exports the full core API.
+React bindings for Framelet. The package is headless: it provides the `useFramelet` hook, compound `Framelet.*` parts, and prop getters. It re-exports the full core API.
+
+A batteries-included preset editor lives in the `apps/demo` application, not in this package.
 
 ## Install
 
@@ -17,13 +19,25 @@ Peer dependencies: React 18 or React 19.
 
 ## Two ways to use Framelet
 
-### Component
+### Compound components
 
 ```tsx
-import { FrameletEditor } from '@framelet/react';
+import { Framelet } from '@framelet/react';
 
 export default function App() {
-  return <FrameletEditor src="/photo.jpg" width={640} height={480} />;
+  return (
+    <Framelet.Root src="/photo.jpg" width={640} height={480}>
+      <Framelet.Viewport>
+        <Framelet.Canvas />
+        <Framelet.EmptyState>Drop an image</Framelet.EmptyState>
+      </Framelet.Viewport>
+      <Framelet.Controls>
+        <Framelet.FileInput />
+        <Framelet.UploadTrigger />
+        <Framelet.RotateTrigger />
+      </Framelet.Controls>
+    </Framelet.Root>
+  );
 }
 ```
 
@@ -33,21 +47,21 @@ export default function App() {
 import { useFramelet } from '@framelet/react';
 
 function MyEditor() {
-  const editor = useFramelet();
-  return <button onClick={() => editor.loadImage('/photo.jpg')}>Load</button>;
+  const api = useFramelet();
+  return <button onClick={() => api.loadImage('/photo.jpg')}>Load</button>;
 }
 ```
 
 ## Exports
 
-- `useFramelet` — headless state/actions hook.
-- `UseFrameletResult` — hook return type.
-- `FrameletEditor` — ready-made component.
-- `FrameletEditorProps` — component props.
+- `useFramelet` — headless state/actions hook with prop getters.
+- `Framelet` — compound component namespace.
+- `frameletAnatomy` / `frameletParts` — part selectors and attributes.
 - Everything from `@framelet/core`.
 
 ## Next steps
 
 - [Quick start](/docs/react/quick-start)
 - [useFramelet API](/docs/react/use-framelet)
-- [FrameletEditor API](/docs/react/framelet-editor)
+- [Anatomy](/docs/react/anatomy)
+- [Custom UI](/docs/react/custom-ui)

@@ -18,15 +18,18 @@ All types are exported from `@framelet/core` and re-exported by framework adapte
 
 ## Images and edits
 
-| Type            | Description                                |
-| --------------- | ------------------------------------------ | ------- | ------- | ------------------- | -------------------- | ----------- |
-| `ImageSource`   | `string \\                                 | Blob \\ | File \\ | HTMLImageElement \\ | HTMLCanvasElement \\ | ImageData`. |
-| `CropRect`      | `{ x, y, width, height }` in image pixels. |
-| `Adjustments`   | Numeric adjustment values.                 |
-| `Transform`     | Rotation, flips, and crop.                 |
-| `FilterId`      | Filter preset identifier.                  |
-| `ExportOptions` | Format and quality for `export()`.         |
-| `HistoryEntry`  | One undo/redo entry.                       |
+| Type             | Description                                         |
+| ---------------- | --------------------------------------------------- | ------- | ------- | ------------------- | -------------------- | ----------- |
+| `ImageSource`    | `string \\                                          | Blob \\ | File \\ | HTMLImageElement \\ | HTMLCanvasElement \\ | ImageData`. |
+| `CropRect`       | `{ x, y, width, height }` in image pixels.          |
+| `Adjustments`    | Numeric adjustment values.                          |
+| `Transform`      | Rotation, flips, and crop.                          |
+| `FilterId`       | Filter preset identifier.                           |
+| `ExportOptions`  | Format and quality for `export()`.                  |
+| `HistoryEntry`   | One undo/redo entry.                                |
+| `ImageSizeLimit` | Width, height, and pixel limits for decoded images. |
+
+`DEFAULT_ALLOWED_EXTENSIONS` is exported as the default value of the `allowedExtensions` option.
 
 ## Example
 

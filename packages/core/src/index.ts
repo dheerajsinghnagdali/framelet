@@ -4,4 +4,5 @@ export type { FrameletEditor } from './types';
 export { createStore } from './store';
 export { reduce, createInitialState } from './reducer';
 export { sourceToImageData } from './image';
+export { normalizeAllowedExtensions } from './validation';
 export { FILTER_CSS, FILTER_IDS, combinedCssFilter, adjustmentsToCss } from './filters';

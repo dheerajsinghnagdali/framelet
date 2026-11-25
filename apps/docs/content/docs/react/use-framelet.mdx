@@ -13,46 +13,108 @@ const editor = useFramelet({ maxHistory: 50 });
 
 ## Parameters
 
-| Parameter | Type              | Description                   |
-| --------- | ----------------- | ----------------------------- |
-| `options` | `FrameletOptions` | Optional core editor options. |
+| Parameter           | Type                           | Description                                         |
+| ------------------- | ------------------------------ | --------------------------------------------------- |
+| `options`           | `UseFrameletOptions`           | Core options plus `src`, `width`, and `height`.     |
+| `src`               | `ImageSource`                  | Image loaded after mount.                           |
+| `width`             | `number`                       | Canvas width in CSS pixels. Defaults to `480`.      |
+| `height`            | `number`                       | Canvas height in CSS pixels. Defaults to `480`.     |
+| `maxHistory`        | `number`                       | Maximum history entries. Passed to the core editor. |
+| `onChange`          | `(state) => void`              | Called on every core state change.                  |
+| `allowedExtensions` | `readonly string[]`            | Extension allowlist for picked or dropped files.    |
+| `maxFileSizeBytes`  | `number`                       | Maximum file size in bytes.                         |
+| `maxImageSize`      | `{ width?, height?, pixels? }` | Maximum decoded dimensions.                         |
+
+The extension and size options are passed to the core editor, so direct `loadImage()` calls are validated too. By default all popular raster formats are allowed and no size limits apply. See [Image loading](/docs/core/concepts/image-loading).
 
 ## Return value
 
-| Field                       | Description                          |
-| --------------------------- | ------------------------------------ |
-| `state`                     | Current `FrameletState`.             |
-| `editor`                    | Underlying core editor instance.     |
-| `loadImage(source)`         | Load an image.                       |
-| `setFilter(id)`             | Set or clear the filter.             |
-| `setAdjustment(key, value)` | Set one adjustment.                  |
-| `setCrop(rect)`             | Preview a crop rectangle.            |
-| `crop(rect)`                | Apply a crop rectangle.              |
-| `applyCrop()`               | Apply the current crop.              |
-| `rotate(deg)`               | Rotate 90, 180, or 270 degrees.      |
-| `flip(axis)`                | Flip horizontally or vertically.     |
-| `undo()`                    | Undo the last action.                |
-| `redo()`                    | Redo the last undone action.         |
-| `reset()`                   | Restore original image and defaults. |
-| `render(ctx, w?, h?)`       | Draw to a canvas.                    |
-| `exportImage(opts?)`        | Export a `Blob`.                     |
+The hook keeps the original flat API for compatibility and also returns grouped `actions` and `meta` objects plus prop getters.
+
+| Field                       | Description                               |
+| --------------------------- | ----------------------------------------- |
+| `state`                     | Current `FrameletState`.                  |
+| `editor`                    | Underlying core editor instance.          |
+| `actions`                   | All core and UI actions.                  |
+| `meta`                      | Refs, geometry, flags, and crop UI state. |
+| `loadImage(source)`         | Load an image.                            |
+| `setFilter(id)`             | Set or clear the filter.                  |
+| `setAdjustment(key, value)` | Set one adjustment.                       |
+| `setCrop(rect)`             | Preview a crop rectangle.                 |
+| `crop(rect)`                | Apply a crop rectangle.                   |
+| `applyCrop()`               | Apply the current crop.                   |
+| `rotate(deg)`               | Rotate 90, 180, or 270 degrees.           |
+| `flip(axis)`                | Flip horizontally or vertically.          |
+| `undo()`                    | Undo the last action.                     |
+| `redo()`                    | Redo the last undone action.              |
+| `reset()`                   | Restore original image and defaults.      |
+| `render(ctx, w?, h?)`       | Draw to a canvas.                         |
+| `exportImage(opts?)`        | Export a `Blob`.                          |
+
+## Prop getters
+
+Prop getters return the props needed for an element. Spread them onto your own markup and pass any extra props you need.
+
+```tsx
+function MyEditor() {
+  const api = useFramelet();
+
+  return (
+    <div {...api.getRootProps({ className: 'my-editor' })}>
+      <div {...api.getViewportProps()}>
+        <canvas {...api.getCanvasProps()} />
+      </div>
+      <button {...api.getUploadTriggerProps()}>Upload</button>
+      <button {...api.getRotateTriggerProps({ degrees: 90 })}>Rotate</button>
+    </div>
+  );
+}
+```
+
+Available getters:
+
+| Area        | Getters                                                                                                                                              |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Layout      | `getRootProps`, `getViewportProps`, `getControlsProps`, `getCanvasProps`                                                                             |
+| Upload      | `getFileInputProps`, `getUploadTriggerProps`                                                                                                         |
+| Crop        | `getCropTriggerProps`, `getApplyCropTriggerProps`, `getCancelCropTriggerProps`, `getCropOverlayProps`, `getCropSelectionProps`, `getCropHandleProps` |
+| Transforms  | `getRotateTriggerProps`, `getFlipHorizontalTriggerProps`, `getFlipVerticalTriggerProps`                                                              |
+| History     | `getUndoTriggerProps`, `getRedoTriggerProps`, `getResetTriggerProps`                                                                                 |
+| Filters     | `getFilterControlProps`, `getFilterSelectProps`, `getFilterOptionProps`                                                                              |
+| Adjustments | `getAdjustmentListProps`, `getAdjustmentControlProps`, `getAdjustmentLabelProps`, `getAdjustmentSliderProps`, `getAdjustmentValueProps`              |
+| States      | `getDropIndicatorProps`, `getEmptyStateProps`                                                                                                        |
+
+Getters merge your props with the internal ones:
+
+- class names are concatenated,
+- styles are shallow-merged with yours taking precedence,
+- refs are composed,
+- your event handler runs first, and the internal handler runs unless you call `preventDefault()`,
+- anatomy attributes are always applied.
+
+`getFileInputProps()` derives `accept` from `allowedExtensions` (for example `.jpg,.jpeg,.png,.gif,.webp,.avif,.bmp` by default). Pass `accept` yourself to override it. Files that fail validation set `state.status` to `error` and populate `state.error`.
+
+See [Anatomy](/docs/react/anatomy) for the full list of `data-part` values.
 
 ## Lifecycle
 
-The hook creates one editor instance with `useState`, subscribes with `useSyncExternalStore`, and calls `editor.destroy()` on unmount.
+The hook creates one editor instance with `useState`, subscribes with `useSyncExternalStore`, and calls `editor.destroy()` on unmount. The returned object is memoized so effects that depend on it do not re-run on unrelated renders.
 
 ## Example
 
 ```tsx
 function Filters() {
-  const { state, setFilter } = useFramelet();
+  const api = useFramelet();
 
   return (
-    <select value={state.filter ?? 'none'} onChange={(e) => setFilter(e.target.value || null)}>
-      <option value="none">None</option>
-      <option value="clarendon">Clarendon</option>
-      <option value="moon">Moon</option>
-    </select>
+    <label {...api.getFilterControlProps()}>
+      Filter
+      <select {...api.getFilterSelectProps()}>
+        <option value="none">None</option>
+        <option value="clarendon">Clarendon</option>
+        <option value="moon">Moon</option>
+      </select>
+    </label>
   );
 }
 ```

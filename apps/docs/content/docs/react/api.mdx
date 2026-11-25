@@ -5,21 +5,49 @@ description: React adapter API reference.
 
 # React adapter API
 
-`@framelet/react` re-exports every core export and adds:
+`@framelet/react` re-exports every core export and adds the following.
 
 ## Components
 
-| Export                | Description                      |
-| --------------------- | -------------------------------- |
-| `FrameletEditor`      | Ready-made editor component.     |
-| `FrameletEditorProps` | Props type for `FrameletEditor`. |
+| Export                | Description                                                           |
+| --------------------- | --------------------------------------------------------------------- |
+| `Framelet`            | Compound component namespace (`Framelet.Root`, `Framelet.Canvas`, …). |
+| `FrameletRoot`        | Provider and root element.                                            |
+| `FrameletViewport`    | Drag/drop surface and canvas container.                               |
+| `FrameletCanvas`      | Rendered canvas.                                                      |
+| `FrameletControls`    | Toolbar container.                                                    |
+| `FrameletFileInput`   | Hidden file input.                                                    |
+| `Framelet*Trigger`    | Explicit action buttons.                                              |
+| `FrameletFilter*`     | Filter controls.                                                      |
+| `FrameletAdjustment*` | Adjustment controls.                                                  |
+| `FrameletCrop*`       | Crop overlay, selection, and handles.                                 |
+| `FrameletRootProps`   | Props type for `Framelet.Root`.                                       |
 
-## Hooks
+The ready-made preset editor is defined in the demo application (`apps/demo/src/FrameletEditor.tsx`), not in this package.
 
-| Export              | Description                   |
-| ------------------- | ----------------------------- |
-| `useFramelet`       | Headless editor hook.         |
-| `UseFrameletResult` | Return type of `useFramelet`. |
+## Hooks and context
+
+| Export               | Description                             |
+| -------------------- | --------------------------------------- |
+| `useFramelet`        | Headless editor hook with prop getters. |
+| `useFrameletContext` | Access the nearest `Framelet.Root` API. |
+| `FrameletContext`    | The context object itself.              |
+| `UseFrameletOptions` | Hook options.                           |
+| `UseFrameletResult`  | Return type of `useFramelet`.           |
+| `FrameletActions`    | Grouped actions type.                   |
+| `FrameletMeta`       | Refs, geometry, and UI state type.      |
+| `FrameletGetters`    | Prop getter type map.                   |
+
+## Anatomy and utilities
+
+| Export            | Description                                   |
+| ----------------- | --------------------------------------------- |
+| `frameletAnatomy` | Anatomy definition for all editor parts.      |
+| `frameletParts`   | Built part map with selectors and attributes. |
+| `createAnatomy`   | Create an anatomy for your own components.    |
+| `composeRefs`     | Compose multiple React refs.                  |
+| `mergeProps`      | Merge internal and consumer props.            |
+| `PropGetter`      | Generic prop getter type.                     |
 
 ## Core re-exports
 

@@ -2,10 +2,12 @@ import { createStore, type Store } from './store';
 import { reduce, createInitialState } from './reducer';
 import { sourceToImageData } from './image';
 import { combinedCssFilter } from './filters';
+import { createValidationOptions, validateFileSource, validateImageSize } from './validation';
 import type { ExportOptions, FrameletEditor, FrameletOptions, ImageSource } from './types';
 
 export function createFramelet(options: FrameletOptions = {}): FrameletEditor {
   const maxHistory = options.maxHistory ?? 50;
+  const validation = createValidationOptions(options);
   const store: Store = createStore(createInitialState());
 
   const dispatch = (action: Parameters<FrameletEditor['dispatch']>[0]) => {
@@ -17,7 +19,9 @@ export function createFramelet(options: FrameletOptions = {}): FrameletEditor {
   const loadImage = async (source: ImageSource) => {
     dispatch({ type: 'LOAD_START' });
     try {
+      validateFileSource(source, validation);
       const data = await sourceToImageData(source);
+      validateImageSize(data, validation);
       dispatch({ type: 'LOAD_SUCCESS', payload: { source, data } });
     } catch (err) {
       dispatch({

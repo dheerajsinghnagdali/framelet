@@ -1,0 +1,74 @@
+---
+title: Anatomy
+description: Parts and data attributes exposed by the React editor.
+---
+
+# Anatomy
+
+Every `Framelet.*` part and every prop getter adds a stable `data-scope="framelet"` and `data-part="..."` attribute. Use `frameletAnatomy` or `frameletParts` to target them without hardcoding strings.
+
+```tsx
+import { frameletParts, Framelet } from '@framelet/react';
+
+frameletParts.canvas.selector;
+// '[data-scope="framelet"][data-part="canvas"]'
+
+<Framelet.Root>
+  <Framelet.Viewport>
+    <Framelet.Canvas />
+  </Framelet.Viewport>
+</Framelet.Root>;
+```
+
+```css
+[data-scope='framelet'][data-part='canvas'] {
+  display: block;
+}
+```
+
+## Parts
+
+| Part                      | Element  | Purpose                                          |
+| ------------------------- | -------- | ------------------------------------------------ |
+| `root`                    | `div`    | Outer editor container and provider boundary.    |
+| `viewport`                | `div`    | Drag/drop surface around the canvas.             |
+| `canvas`                  | `canvas` | Rendered image.                                  |
+| `drop-indicator`          | `div`    | Shown while a file is dragged over the viewport. |
+| `empty-state`             | `div`    | Shown until the first image is ready.            |
+| `controls`                | `div`    | Toolbar container.                               |
+| `file-input`              | `input`  | Hidden file picker.                              |
+| `upload-trigger`          | `button` | Opens the file picker.                           |
+| `crop-trigger`            | `button` | Starts crop selection.                           |
+| `apply-crop-trigger`      | `button` | Applies the crop selection.                      |
+| `cancel-crop-trigger`     | `button` | Leaves crop mode.                                |
+| `rotate-trigger`          | `button` | Rotates the image.                               |
+| `flip-horizontal-trigger` | `button` | Flips horizontally.                              |
+| `flip-vertical-trigger`   | `button` | Flips vertically.                                |
+| `undo-trigger`            | `button` | Undoes the last edit.                            |
+| `redo-trigger`            | `button` | Redoes the last undone edit.                     |
+| `reset-trigger`           | `button` | Restores the original image.                     |
+| `filter-control`          | `label`  | Filter label wrapper.                            |
+| `filter-select`           | `select` | Filter picker.                                   |
+| `filter-option`           | `option` | One filter choice.                               |
+| `adjustment-list`         | `div`    | Adjustment controls container.                   |
+| `adjustment-control`      | `div`    | One adjustment row.                              |
+| `adjustment-label`        | `span`   | Adjustment name.                                 |
+| `adjustment-slider`       | `input`  | Adjustment range input.                          |
+| `adjustment-value`        | `span`   | Current adjustment value.                        |
+| `crop-overlay`            | `div`    | Crop overlay layer.                              |
+| `crop-selection`          | `div`    | Resizable crop rectangle.                        |
+| `crop-handle`             | `span`   | One of the four crop resize handles.             |
+
+## Custom anatomy
+
+`createAnatomy` is exported for building the same kind of part map for your own components.
+
+```tsx
+import { createAnatomy } from '@framelet/react';
+
+const dialogAnatomy = createAnatomy('dialog').parts('root', 'trigger', 'content');
+const parts = dialogAnatomy.build();
+
+parts.trigger.attrs;
+// { 'data-scope': 'dialog', 'data-part': 'trigger' }
+```

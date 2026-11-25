@@ -10,16 +10,28 @@ import { createFramelet } from '@framelet/core';
 
 const editor = createFramelet({
   maxHistory: 50,
+  allowedExtensions: ['.jpg', '.jpeg', '.png', '.webp'],
+  maxFileSizeBytes: 5 * 1024 * 1024,
+  maxImageSize: { width: 4000, height: 4000, pixels: 12_000_000 },
   onChange: (state) => console.log(state.status),
 });
 ```
 
 ## Options
 
-| Option       | Type              | Default | Description                     |
-| ------------ | ----------------- | ------- | ------------------------------- |
-| `maxHistory` | `number`          | `50`    | Maximum number of undo entries. |
-| `onChange`   | `(state) => void` | —       | Called on every state change.   |
+| Option              | Type                           | Default                | Description                                         |
+| ------------------- | ------------------------------ | ---------------------- | --------------------------------------------------- |
+| `maxHistory`        | `number`                       | `50`                   | Maximum number of undo entries.                     |
+| `onChange`          | `(state) => void`              | —                      | Called on every state change.                       |
+| `allowedExtensions` | `readonly string[]`            | Popular raster formats | Extensions accepted from `File` and `Blob` sources. |
+| `maxFileSizeBytes`  | `number`                       | — (unlimited)          | Maximum `File.size` in bytes.                       |
+| `maxImageSize`      | `{ width?, height?, pixels? }` | — (unlimited)          | Maximum decoded dimensions and pixel count.         |
+
+The default allowlist is `DEFAULT_ALLOWED_EXTENSIONS`: `.jpg`, `.jpeg`, `.png`, `.gif`, `.webp`, `.avif`, and `.bmp`. Leading dots are optional and matching is case-insensitive. Pass an empty array to reject every file.
+
+`maxFileSizeBytes` is checked before decoding. `maxImageSize` is checked after decoding and applies to every source type, including URL strings and `ImageData`.
+
+A rejected source dispatches `LOAD_ERROR`, sets `state.status` to `error`, populates `state.error`, and rejects the `loadImage()` promise. See [Image loading](/docs/core/concepts/image-loading).
 
 ## Editor methods
 

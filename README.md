@@ -5,7 +5,7 @@ A headless, Instagram-inspired image editor. Framework-agnostic core plus thin a
 ## Packages
 
 - `@framelet/core` — framework-agnostic engine
-- `@framelet/react` — React hook (`useFramelet`) and component
+- `@framelet/react` — React hook (`useFramelet`), prop getters, and compound parts
 - `@framelet/solid` — Solid bindings
 - `@framelet/angular` — Angular bindings
 
@@ -18,14 +18,26 @@ npm install @framelet/react
 ## Quick start (React)
 
 ```tsx
-import { FrameletEditor } from '@framelet/react';
+import { Framelet } from '@framelet/react';
 
 export default function App() {
-  return <FrameletEditor width={640} height={480} />;
+  return (
+    <Framelet.Root width={640} height={480}>
+      <Framelet.Viewport>
+        <Framelet.Canvas />
+        <Framelet.EmptyState>Drop an image</Framelet.EmptyState>
+      </Framelet.Viewport>
+      <Framelet.Controls>
+        <Framelet.FileInput />
+        <Framelet.UploadTrigger />
+        <Framelet.RotateTrigger />
+      </Framelet.Controls>
+    </Framelet.Root>
+  );
 }
 ```
 
-Or use the hook for a fully custom UI:
+A full preset editor is composed in `apps/demo`. For a fully custom UI, use the hook directly:
 
 ```tsx
 import { useFramelet } from '@framelet/react';

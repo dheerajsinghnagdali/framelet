@@ -18,6 +18,28 @@ description: Supported image sources and errors.
 
 Cross-origin URLs must allow CORS, otherwise canvas readback will fail.
 
+## Restricting sources
+
+`createFramelet` accepts validation options that are applied by `loadImage()`:
+
+| Option              | Default                | Description                                                       |
+| ------------------- | ---------------------- | ----------------------------------------------------------------- |
+| `allowedExtensions` | Popular raster formats | Allowlist for `File` names; a `Blob` falls back to its MIME type. |
+| `maxFileSizeBytes`  | — (unlimited)          | Maximum file size, checked before decoding.                       |
+| `maxImageSize`      | — (unlimited)          | Maximum decoded `width`, `height`, or `width * height`.           |
+
+By default `.jpg`, `.jpeg`, `.png`, `.gif`, `.webp`, `.avif`, and `.bmp` are accepted, and no size limits are applied. Extension and byte-size checks apply only to `File` and `Blob` sources; dimension checks apply to every source after decoding.
+
+```ts
+const editor = createFramelet({
+  allowedExtensions: ['.png', '.webp'],
+  maxFileSizeBytes: 5 * 1024 * 1024,
+  maxImageSize: { width: 4000, pixels: 12_000_000 },
+});
+```
+
+A rejected file produces a `LOAD_ERROR`: `state.status` becomes `error`, `state.error` holds a descriptive `Error`, and the `loadImage()` promise rejects. This is the same path used for decode failures.
+
 ## Status lifecycle
 
 `status` moves through `loading`, `ready`, or `error`. On failure, `state.error` contains the reason and `loadImage()` rejects.

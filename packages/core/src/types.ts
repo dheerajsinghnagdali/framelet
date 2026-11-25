@@ -109,9 +109,28 @@ export type FrameletAction =
   | { type: 'REDO' }
   | { type: 'RESET' };
 
+export const DEFAULT_ALLOWED_EXTENSIONS = [
+  'jpg',
+  'jpeg',
+  'png',
+  'gif',
+  'webp',
+  'avif',
+  'bmp',
+] as const;
+
+export interface ImageSizeLimit {
+  width?: number;
+  height?: number;
+  pixels?: number;
+}
+
 export interface FrameletOptions {
   maxHistory?: number;
   onChange?: (state: FrameletState) => void;
+  allowedExtensions?: readonly string[];
+  maxFileSizeBytes?: number;
+  maxImageSize?: ImageSizeLimit;
 }
 
 export interface FrameletEditor {

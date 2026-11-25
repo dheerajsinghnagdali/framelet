@@ -1,54 +1,97 @@
 ---
 title: Custom UI
-description: Build a fully custom React editor.
+description: Build a fully custom React editor with prop getters or compound parts.
 ---
 
 # Custom UI
 
-Use `useFramelet` when you want complete control over markup and styling.
+Use `useFramelet` when you want complete control over markup and styling. Prop getters provide the state and handlers while leaving the elements to you.
 
 ```tsx
-import { useEffect, useRef } from 'react';
 import { useFramelet, FILTER_IDS } from '@framelet/react';
 
 export function MyEditor() {
   const api = useFramelet();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const ctx = canvasRef.current?.getContext('2d');
-    if (ctx) api.render(ctx, 480, 480);
-  }, [api, api.state]);
 
   return (
-    <div>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) void api.loadImage(file);
-        }}
-      />
-      <canvas ref={canvasRef} width={480} height={480} />
+    <div {...api.getRootProps({ className: 'editor' })}>
+      <div {...api.getViewportProps()}>
+        <canvas {...api.getCanvasProps()} />
+      </div>
 
-      <select onChange={(e) => api.setFilter(e.target.value as any)}>
-        {FILTER_IDS.map((id) => (
-          <option key={id} value={id}>
-            {id}
-          </option>
-        ))}
-      </select>
+      <input {...api.getFileInputProps()} />
+      <button {...api.getUploadTriggerProps()}>Upload</button>
 
-      <button onClick={() => api.rotate(90)}>Rotate</button>
-      <button onClick={() => api.flip('h')}>Flip H</button>
-      <button onClick={api.undo}>Undo</button>
-      <button onClick={api.redo}>Redo</button>
+      <label {...api.getFilterControlProps()}>
+        Filter
+        <select {...api.getFilterSelectProps()}>
+          {FILTER_IDS.map((id) => (
+            <option key={id} {...api.getFilterOptionProps({ id })} />
+          ))}
+        </select>
+      </label>
+
+      <button {...api.getRotateTriggerProps()}>Rotate</button>
+      <button {...api.getFlipHorizontalTriggerProps()}>Flip H</button>
+      <button {...api.getUndoTriggerProps()}>Undo</button>
+      <button {...api.getRedoTriggerProps()}>Redo</button>
     </div>
   );
 }
 ```
 
-## Rendering on state change
+Every getter merges your props with the internal ones. Your event handlers run first, and calling `preventDefault()` stops the internal handler.
 
-`api.state` is a stable snapshot. Including it in the effect dependency array re-renders the canvas after every edit.
+## Compound components
+
+For structured UIs, compose `Framelet.*` parts instead. They read the same state from context and apply the matching prop getter.
+
+```tsx
+import { Framelet } from '@framelet/react';
+
+export function MyEditor() {
+  return (
+    <Framelet.Root>
+      <Framelet.Viewport>
+        <Framelet.Canvas />
+        <Framelet.EmptyState>Drop an image here</Framelet.EmptyState>
+      </Framelet.Viewport>
+
+      <Framelet.Controls>
+        <Framelet.FileInput />
+        <Framelet.UploadTrigger>Choose image</Framelet.UploadTrigger>
+        <Framelet.CropTrigger />
+        <Framelet.ApplyCropTrigger />
+        <Framelet.CancelCropTrigger />
+        <Framelet.RotateTrigger />
+        <Framelet.UndoTrigger />
+      </Framelet.Controls>
+
+      <Framelet.AdjustmentList />
+    </Framelet.Root>
+  );
+}
+```
+
+Parts can be omitted or reordered. The preset editor in `apps/demo` is one composition of these parts. See [Anatomy](/docs/react/anatomy) for styling selectors.
+
+## Direct editor access
+
+The core editor is still available when you need to render or export outside React's render cycle.
+
+```tsx
+function ExportButton() {
+  const api = useFramelet();
+
+  return (
+    <button
+      onClick={async () => {
+        const blob = await api.exportImage({ format: 'image/png' });
+        console.log(blob);
+      }}
+    >
+      Export
+    </button>
+  );
+}
+```

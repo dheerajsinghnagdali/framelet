@@ -7,13 +7,14 @@ description: Low-level helpers exported by core.
 
 For advanced integrations, core exports its building blocks.
 
-| Export               | Purpose                                      |
-| -------------------- | -------------------------------------------- |
-| `createStore`        | Create a minimal observable store.           |
-| `reduce`             | Pure state reducer.                          |
-| `createInitialState` | Build the default `FrameletState`.           |
-| `sourceToImageData`  | Normalize an `ImageSource` into `ImageData`. |
-| `adjustmentsToCss`   | Convert adjustments to a CSS filter string.  |
-| `combinedCssFilter`  | Compose a filter preset and adjustments.     |
+| Export                       | Purpose                                       |
+| ---------------------------- | --------------------------------------------- |
+| `createStore`                | Create a minimal observable store.            |
+| `reduce`                     | Pure state reducer.                           |
+| `createInitialState`         | Build the default `FrameletState`.            |
+| `sourceToImageData`          | Normalize an `ImageSource` into `ImageData`.  |
+| `normalizeAllowedExtensions` | Normalize extension strings for an allowlist. |
+| `adjustmentsToCss`           | Convert adjustments to a CSS filter string.   |
+| `combinedCssFilter`          | Compose a filter preset and adjustments.      |
 
 Most applications only need `createFramelet`.

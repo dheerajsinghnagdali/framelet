@@ -1,24 +1,44 @@
 ---
 title: Quick start
-description: Use FrameletEditor in a React app.
+description: Compose an editor with Framelet parts in a React app.
 ---
 
 # Quick start
 
-## Ready-made component
+## Compound components
 
 ```tsx
-import { FrameletEditor } from '@framelet/react';
+import { Framelet } from '@framelet/react';
 
 export default function App() {
-  return <FrameletEditor width={640} height={480} />;
+  return (
+    <Framelet.Root width={640} height={480}>
+      <Framelet.Viewport>
+        <Framelet.Canvas />
+        <Framelet.EmptyState>Drop an image here</Framelet.EmptyState>
+      </Framelet.Viewport>
+      <Framelet.Controls>
+        <Framelet.FileInput />
+        <Framelet.UploadTrigger />
+        <Framelet.CropTrigger />
+        <Framelet.ApplyCropTrigger />
+        <Framelet.RotateTrigger />
+        <Framelet.UndoTrigger />
+        <Framelet.RedoTrigger />
+      </Framelet.Controls>
+      <Framelet.FilterControl />
+      <Framelet.AdjustmentList />
+    </Framelet.Root>
+  );
 }
 ```
 
 ## Load an initial image
 
 ```tsx
-<FrameletEditor src="/photo.jpg" width={640} height={480} />
+<Framelet.Root src="/photo.jpg" width={640} height={480}>
+  {/* parts */}
+</Framelet.Root>
 ```
 
 The `src` prop accepts any `ImageSource`, including URLs, `File`, `Blob`, `HTMLImageElement`, and `ImageData`.
@@ -29,23 +49,26 @@ The `src` prop accepts any `ImageSource`, including URLs, `File`, `Blob`, `HTMLI
 import { useFramelet } from '@framelet/react';
 
 function Editor() {
-  const { state, loadImage, setFilter, undo, redo, render } = useFramelet();
+  const api = useFramelet();
 
   return (
     <>
       <input
         type="file"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) void loadImage(file);
+        onChange={(event) => {
+          const file = event.target.files?.[0];
+          if (file) void api.loadImage(file);
         }}
       />
-      <button onClick={() => setFilter('clarendon')}>Clarendon</button>
-      <button onClick={undo}>Undo</button>
-      <button onClick={redo}>Redo</button>
+      <label {...api.getFilterControlProps()}>
+        Filter
+        <select {...api.getFilterSelectProps()} />
+      </label>
+      <button onClick={api.undo}>Undo</button>
+      <button onClick={api.redo}>Redo</button>
     </>
   );
 }
 ```
 
-See [Custom UI](/docs/react/custom-ui) for a complete canvas example.
+See [Custom UI](/docs/react/custom-ui) for complete canvas and prop-getter examples.
