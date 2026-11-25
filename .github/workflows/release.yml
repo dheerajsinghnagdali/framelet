@@ -10,6 +10,7 @@ jobs:
     permissions:
       contents: write
       id-token: write
+      packages: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -19,6 +20,38 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm run build
-      - run: npm publish --workspaces --access public --provenance
+      - name: Resolve release metadata
+        id: release
         env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          DIST_TAG=$(node scripts/release-tag.mjs "$REF_NAME")
+          echo "dist-tag=$DIST_TAG" >> "$GITHUB_OUTPUT"
+          if [ "$DIST_TAG" = "latest" ]; then
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Publish to npm
+        env:
+          DIST_TAG: ${{ steps.release.outputs.dist-tag }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --workspaces --access public --provenance --tag "$DIST_TAG" --registry https://registry.npmjs.org
+      - name: Publish to GitHub Packages
+        env:
+          DIST_TAG: ${{ steps.release.outputs.dist-tag }}
+          NODE_AUTH_TOKEN: ${{ github.token }}
+        run: |
+          printf 'registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=%s\n' "$NODE_AUTH_TOKEN" > "$RUNNER_TEMP/npmrc-github"
+          npm publish --workspaces --tag "$DIST_TAG" --registry https://npm.pkg.github.com --userconfig "$RUNNER_TEMP/npmrc-github"
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PRERELEASE: ${{ steps.release.outputs.prerelease }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          if [ "$PRERELEASE" = "true" ]; then
+            gh release create "$REF_NAME" --title "$REF_NAME" --generate-notes --prerelease
+          else
+            gh release create "$REF_NAME" --title "$REF_NAME" --generate-notes
+          fi
