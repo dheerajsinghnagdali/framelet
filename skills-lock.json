@@ -1,6 +1,13 @@
 {
   "version": 2,
   "skills": {
+    "conventional-branch": {
+      "source": "conventional-branch/conventional-branch",
+      "commit": "bef28a478a12d77d25ba141bb90ac745850716ed",
+      "sourceType": "github",
+      "skillPath": "skills/conventional-branch/SKILL.md",
+      "computedHash": "186092eeb80c39fb02abd969408b8b1b963482cabb51086fb39d3dabbdee55eb"
+    },
     "frontend-design": {
       "source": "anthropics/skills",
       "commit": "e4bb5d960d87126ff3b3a8af1a104b7db67560ba",
