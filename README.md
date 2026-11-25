@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="assets/framelet.svg" alt="Framelet logo" width="96" height="96" />
+</div>
+
 # Framelet
 
 A headless, Instagram-inspired image editor. Framework-agnostic core plus thin adapters for React, Solid.js, Angular, and more.
