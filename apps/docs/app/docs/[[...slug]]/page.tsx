@@ -6,6 +6,19 @@ import { DocsPage, DocsBody, DocsDescription, DocsTitle } from 'fumadocs-ui/page
 import { notFound, redirect } from 'next/navigation';
 import { getMDXComponents } from '@/mdx-components';
 
+function getPackageLabel(slugs: string[]): string | undefined {
+  const slug = slugs[0];
+  const roots = [...source.pageTree.children, ...(source.pageTree.fallback?.children ?? [])];
+  const root = roots.find(
+    (node) =>
+      node.type === 'folder' &&
+      node.root &&
+      (node.index?.url === `/docs/${slug}` || node.$ref?.folder === slug),
+  );
+
+  return typeof root?.name === 'string' ? `Framelet ${root.name}` : undefined;
+}
+
 export default async function Page(props: { params: Promise<{ slug?: string[] }> }) {
   const params = await props.params;
   if (!params.slug || params.slug.length === 0) {
@@ -47,8 +60,13 @@ export async function generateMetadata(props: { params: Promise<{ slug?: string[
   const params = await props.params;
   const page = source.getPage(params.slug);
   if (!page) notFound();
+
+  const title = `${page.data.title ?? 'Documentation'} | ${getPackageLabel(page.slugs) ?? 'Framelet'}`;
+
   return {
-    title: page.data.title,
+    title: { absolute: title },
     description: page.data.description,
+    openGraph: { title },
+    twitter: { title },
   };
 }
