@@ -40,6 +40,8 @@ Releases are driven by semantic-version tags such as `v1.2.3`. The tag version s
 | `1.2.3-rc.1`     | `rc`     |
 | Other prerelease | `next`   |
 
+The tag version must exactly match the `version` declared by every publishable package under `packages/*/package.json`. The workflow verifies this before installing dependencies and stops with an error if any package disagrees.
+
 Pushing a `v*` tag builds and publishes all publishable workspaces to npm and GitHub Packages, then creates a GitHub Release. Prerelease versions are marked as prereleases on GitHub.
 
 ## Editor setup

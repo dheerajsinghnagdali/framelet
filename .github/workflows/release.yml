@@ -18,6 +18,18 @@ jobs:
           node-version: 22
           cache: npm
           registry-url: https://registry.npmjs.org
+      - name: Verify tag matches package versions
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          TAG_VERSION="${REF_NAME#v}"
+          for manifest in packages/*/package.json; do
+            PACKAGE_VERSION=$(node -p "require('./$manifest').version")
+            if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
+              echo "::error::$manifest declares $PACKAGE_VERSION but tag $REF_NAME expects $TAG_VERSION" >&2
+              exit 1
+            fi
+          done
       - run: npm ci
       - run: npm run build
       - name: Resolve release metadata
