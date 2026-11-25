@@ -2,13 +2,13 @@ name: Release
 
 on:
   push:
-    tags: ['v*']
+    branches: ['release/v*']
 
 jobs:
   release:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
       id-token: write
       packages: write
     steps:
@@ -18,15 +18,33 @@ jobs:
           node-version: 22
           cache: npm
           registry-url: https://registry.npmjs.org
-      - name: Verify tag matches package versions
+      - name: Validate release branch version
         env:
-          REF_NAME: ${{ github.ref_name }}
+          BRANCH_NAME: ${{ github.ref_name }}
         run: |
-          TAG_VERSION="${REF_NAME#v}"
+          VERSION="${BRANCH_NAME#release/}"
+          case "$VERSION" in
+            v[0-9]*) ;;
+            *)
+              echo "::error::Release branches must be named release/v<semver>, got $BRANCH_NAME" >&2
+              exit 1
+              ;;
+          esac
+          case "$VERSION" in
+            *[!a-z0-9.-]*|*..*|*--*|*-.*|*.-*|-*|.*|*-|*.)
+              echo "::error::Invalid release branch name: $BRANCH_NAME" >&2
+              exit 1
+              ;;
+          esac
+          node scripts/release-tag.mjs "$VERSION" > /dev/null 2>&1 || {
+            echo "::error::Invalid release branch name: $BRANCH_NAME" >&2
+            exit 1
+          }
+          VERSION="${VERSION#v}"
           for manifest in packages/*/package.json; do
             PACKAGE_VERSION=$(node -p "require('./$manifest').version")
-            if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
-              echo "::error::$manifest declares $PACKAGE_VERSION but tag $REF_NAME expects $TAG_VERSION" >&2
+            if [ "$PACKAGE_VERSION" != "$VERSION" ]; then
+              echo "::error::$manifest declares $PACKAGE_VERSION but branch $BRANCH_NAME expects $VERSION" >&2
               exit 1
             fi
           done
@@ -35,15 +53,10 @@ jobs:
       - name: Resolve release metadata
         id: release
         env:
-          REF_NAME: ${{ github.ref_name }}
+          BRANCH_NAME: ${{ github.ref_name }}
         run: |
-          DIST_TAG=$(node scripts/release-tag.mjs "$REF_NAME")
+          DIST_TAG=$(node scripts/release-tag.mjs "${BRANCH_NAME#release/}")
           echo "dist-tag=$DIST_TAG" >> "$GITHUB_OUTPUT"
-          if [ "$DIST_TAG" = "latest" ]; then
-            echo "prerelease=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "prerelease=true" >> "$GITHUB_OUTPUT"
-          fi
       - name: Publish to npm
         env:
           DIST_TAG: ${{ steps.release.outputs.dist-tag }}
@@ -56,14 +69,3 @@ jobs:
         run: |
           printf 'registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=%s\n' "$NODE_AUTH_TOKEN" > "$RUNNER_TEMP/npmrc-github"
           npm publish --workspaces --tag "$DIST_TAG" --registry https://npm.pkg.github.com --userconfig "$RUNNER_TEMP/npmrc-github"
-      - name: Create GitHub release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PRERELEASE: ${{ steps.release.outputs.prerelease }}
-          REF_NAME: ${{ github.ref_name }}
-        run: |
-          if [ "$PRERELEASE" = "true" ]; then
-            gh release create "$REF_NAME" --title "$REF_NAME" --generate-notes --prerelease
-          else
-            gh release create "$REF_NAME" --title "$REF_NAME" --generate-notes
-          fi

@@ -30,7 +30,7 @@ Use Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, …).
 
 ## Releases
 
-Releases are driven by semantic-version tags such as `v1.2.3`. The tag version selects the dist-tag used on npm and GitHub Packages:
+Releases are driven by `release/v<semver>` branches, not Git tags. The version after `release/v` selects the dist-tag used on npm and GitHub Packages:
 
 | Version          | Dist-tag |
 | ---------------- | -------- |
@@ -40,11 +40,11 @@ Releases are driven by semantic-version tags such as `v1.2.3`. The tag version s
 | `1.2.3-rc.1`     | `rc`     |
 | Other prerelease | `next`   |
 
-The tag version must exactly match the `version` declared by every publishable package under `packages/*/package.json`. The workflow verifies this before installing dependencies and stops with an error if any package disagrees.
+The branch version must exactly match the `version` declared by every publishable package under `packages/*/package.json`. The workflow verifies this before installing dependencies and stops with an error if any package disagrees.
 
-Prepare each release on a `release/v<semver>` branch, such as `release/v1.2.3` or `release/v1.2.3-beta.1`. Branch names use lowercase letters, digits, hyphens, and dots only. The version after `release/v` must be valid semver and match every publishable package; CI rejects branches that don't. Tag the release from that branch with the matching `v<semver>` tag to trigger publishing.
+Create a branch such as `release/v1.2.3` or `release/v1.2.3-beta.1`. Branch names use lowercase letters, digits, hyphens, and dots only. The version after `release/v` must be valid semver and match every publishable package; CI rejects branches that don't.
 
-Pushing a `v*` tag builds and publishes all publishable workspaces to npm and GitHub Packages, then creates a GitHub Release. Prerelease versions are marked as prereleases on GitHub.
+Pushing the release branch builds and publishes all publishable workspaces to npm and GitHub Packages. Publishing is never triggered by Git tags.
 
 ## Editor setup
 
