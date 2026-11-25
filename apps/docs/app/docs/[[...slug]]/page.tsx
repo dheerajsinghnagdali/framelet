@@ -1,5 +1,7 @@
 import { source } from '@/lib/source';
+import { Logo } from '@/components/logo';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
+import type { LayoutTab } from 'fumadocs-ui/layouts/shared';
 import { DocsPage, DocsBody, DocsDescription, DocsTitle } from 'fumadocs-ui/page';
 import { notFound, redirect } from 'next/navigation';
 import { getMDXComponents } from '@/mdx-components';
@@ -17,9 +19,14 @@ export default async function Page(props: { params: Promise<{ slug?: string[] }>
   return (
     <DocsLayout
       tree={source.pageTree}
-      tabMode="top"
-      tabs={{ transform: (option: any) => ({ ...option, unlisted: false }) }}
-      nav={{ title: 'Framelet' }}
+      tabs={{
+        transform: (option: LayoutTab): LayoutTab => ({
+          ...option,
+          title: <>Framelet {option.title}</>,
+          unlisted: false,
+        }),
+      }}
+      nav={{ title: <Logo />, url: '/docs' }}
     >
       <DocsPage toc={page.data.toc} full={page.data.full}>
         <DocsTitle>{page.data.title}</DocsTitle>
