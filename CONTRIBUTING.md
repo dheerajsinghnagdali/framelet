@@ -42,6 +42,8 @@ Releases are driven by semantic-version tags such as `v1.2.3`. The tag version s
 
 The tag version must exactly match the `version` declared by every publishable package under `packages/*/package.json`. The workflow verifies this before installing dependencies and stops with an error if any package disagrees.
 
+Prepare each release on a `release/v<semver>` branch, such as `release/v1.2.3` or `release/v1.2.3-beta.1`. Branch names use lowercase letters, digits, hyphens, and dots only. The version after `release/v` must be valid semver and match every publishable package; CI rejects branches that don't. Tag the release from that branch with the matching `v<semver>` tag to trigger publishing.
+
 Pushing a `v*` tag builds and publishes all publishable workspaces to npm and GitHub Packages, then creates a GitHub Release. Prerelease versions are marked as prereleases on GitHub.
 
 ## Editor setup

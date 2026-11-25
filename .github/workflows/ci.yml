@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'release/**']
   pull_request:
 
 jobs:
@@ -17,6 +17,34 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: npm
+      - name: Validate release branch version
+        if: startsWith(github.head_ref, 'release/') || startsWith(github.ref_name, 'release/')
+        env:
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+        run: |
+          VERSION="${BRANCH_NAME#release/}"
+          case "$VERSION" in
+            v[0-9]*) ;;
+            *)
+              echo "::error::Release branches must be named release/v<semver>, got $BRANCH_NAME" >&2
+              exit 1
+              ;;
+          esac
+          node scripts/release-tag.mjs "$VERSION" > /dev/null
+          case "$VERSION" in
+            *[!a-z0-9.-]*|*..*|*--*|*-.*|*.-*|-*|.*|*-|*.)
+              echo "::error::Invalid release branch name: $BRANCH_NAME" >&2
+              exit 1
+              ;;
+          esac
+          VERSION="${VERSION#v}"
+          for manifest in packages/*/package.json; do
+            PACKAGE_VERSION=$(node -p "require('./$manifest').version")
+            if [ "$PACKAGE_VERSION" != "$VERSION" ]; then
+              echo "::error::$manifest declares $PACKAGE_VERSION but branch $BRANCH_NAME expects $VERSION" >&2
+              exit 1
+            fi
+          done
       - run: npm ci
       - run: npm run format:check
       - run: npm run lint
